@@ -4,6 +4,9 @@ packages@{ yandex-browser-stable, yandex-browser-beta }:
 
 with lib;
 
+let
+  cfg = config.programs.yandex-browser;
+in
 {
   options = {
     programs.yandex-browser = {
@@ -19,19 +22,20 @@ with lib;
         default = "stable";
         type = types.str;
         description = ''
-          One of "stable" or "beta".
+          One of "stable", "beta" or "both".
         '';
       };
     };
   };
 
   config = let
-    packageType = config.programs.yandex-browser.package;
     package =
-      assert (builtins.elem packageType [ "stable" "beta" ]);
-      getAttr "yandex-browser-${config.programs.yandex-browser.package}" packages;
+      assert (builtins.elem cfg.package [ "stable" "beta" "both" ]);
+      if cfg.package == "both"
+        then attrValues packages
+        else getAttr "yandex-browser-${cfg.package}" packages;
   in
-    mkIf config.programs.yandex-browser.enable {
-      home.packages = [ package ];
+    mkIf cfg.enable {
+      home.packages = if cfg.package == "both" then package else [ package ];
     };
 }
