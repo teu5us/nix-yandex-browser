@@ -1,4 +1,4 @@
-{ stable, beta }:
+packages@{ stable, beta }:
 
 { config, lib, pkgs, ... }:
 
@@ -28,19 +28,12 @@ with lib;
   };
 
   config = let
-    packages = {
-      yandex-browser-stable = stable;
-      yandex-browser-beta = beta;
-    };
     packageType = config.programs.yandex-browser.package;
     package =
       assert (builtins.elem packageType [ "stable" "beta" ]);
-      getAttr ("yandex-browser-${packageType}") packages;
+      getAttr config.programs.yandex-browser.package packages;
   in
     mkIf config.programs.yandex-browser.enable {
-      nixpkgs.overlays = [
-        (self: super: packages)
-      ];
       nixpkgs.config.permittedInsecurePackages = [ package.name ];
       environment.systemPackages = [ package ];
     };
