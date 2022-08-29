@@ -12,9 +12,7 @@ with lib;
         type = types.bool;
         description = ''
           Enable Yandex Browser. Adds the selected (`programs.yandex-browser.package`)
-          package to `environment.systemPackages` AND `nixpkgs.config.permittedInsecurePackages`.
-
-          One still needs to configure Nix to allow installation of unfree packages.
+          package to `environment.systemPackages`.
         '';
       };
       package = mkOption {
@@ -34,7 +32,6 @@ with lib;
       getAttr config.programs.yandex-browser.package packages;
   in
     mkIf config.programs.yandex-browser.enable {
-      nixpkgs.config.permittedInsecurePackages = [ package.name ];
       environment.systemPackages = [ package ];
     };
 }

@@ -7,15 +7,25 @@
 
   outputs = { nixpkgs, ... }:
     let
+      getInfo = with builtins; file: fromJSON (readFile file);
+      getName = file: let
+        info = getInfo file;
+      in
+        "${info.pname}-${info.version}";
       pkgs = import nixpkgs {
         system = "x86_64-linux";
-        config = { allowUnfree = true; };
+        config = {
+          allowUnfree = true;
+          permittedInsecurePackages = [
+            (getName ./json/yandex-browser-stable.json)
+            (getName ./json/yandex-browser-beta.json)
+          ];
+        };
       };
       python = pkgs.python3.withPackages (ps: with ps; [
         requests
         beautifulsoup4
       ]);
-      getInfo = with builtins; file: fromJSON (readFile file);
       yandex-browser-beta = pkgs.callPackage ./yandex-browser.nix
         (getInfo ./json/yandex-browser-beta.json);
       yandex-browser-stable = pkgs.callPackage ./yandex-browser.nix
