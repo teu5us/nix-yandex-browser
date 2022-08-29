@@ -29,6 +29,7 @@ With automatic hash updates, I hope.
    ```nix
    {
      programs.yandex-browser.enable = true;
-     programs.yandex-browser.package = "beta"; # default is "stable"
+     # default is "stable", you can also have "both"
+     programs.yandex-browser.package = "beta";
    }
    ```
