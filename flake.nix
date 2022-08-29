@@ -8,6 +8,10 @@
   outputs = { nixpkgs, ... }:
     let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      python = pkgs.python3.withPackages (ps: with ps; [
+        requests
+        beautifulsoup4
+      ]);
     in
     {
       packages.x86_64-linux =
@@ -22,11 +26,18 @@
         };
       devShell.x86_64-linux = pkgs.mkShell {
         buildInputs = [
-          (pkgs.python3.withPackages (ps: with ps; [
-            requests
-            beautifulsoup4
-          ]))
+          python
         ];
+      };
+      apps.x86_64-linux.update = {
+        type = "app";
+        program = toString (pkgs.writeScript "update" ''
+          #!/usr/bin/env bash
+          set -e
+          set -x
+
+          ${python}/bin/python3 json/update.py
+        '');
       };
     };
 }
