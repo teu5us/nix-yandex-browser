@@ -24,4 +24,11 @@ jobs:
           min-free = 3000000000
           max-free = 6000000000
           
-    - run: nix run .#update
+    - run: |
+        set -x
+        git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        nix run .#update
+        git add json/yandex-browser-stable.json json/yandex-browser-beta.json
+        git commit -m "$(date) hashes"
+        git push
