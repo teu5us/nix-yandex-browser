@@ -33,16 +33,16 @@
       ]);
 
       packages = {
-        yandex-browser-beta = pkgs.callPackage ./yandex-browser.nix
-          (getInfo betaFile);
-        yandex-browser-stable = pkgs.callPackage ./yandex-browser.nix
-          (getInfo stableFile);
+        yandex-browser-beta = pkgs.callPackage ./package (getInfo betaFile);
+        yandex-browser-stable = pkgs.callPackage ./package (getInfo stableFile);
       };
     in
 
     {
 
-      nixosModule = import ./modules/yandex-browser.nix packages;
+      nixosModule = import ./modules/nixos packages;
+
+      homeManagerModule = import ./modules/home-manager packages;
 
       packages.x86_64-linux = packages;
 
