@@ -7,10 +7,10 @@
 
   outputs = { nixpkgs, ... }:
     let
-      nixpkgs' = import nixpkgs {
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
         config = { allowUnfree = true; };
       };
-      pkgs = nixpkgs'.legacyPackages.x86_64-linux;
       python = pkgs.python3.withPackages (ps: with ps; [
         requests
         beautifulsoup4
