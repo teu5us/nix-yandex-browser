@@ -19,16 +19,19 @@ with lib;
       };
       package = mkOption {
         default = "stable";
-        type = types.oneOf [ "stable" "beta" ];
+        type = types.str;
         description = ''
-          Choose the stable or beta version of the Yandex Browser.
+          One of "stable" or "beta".
         '';
       };
     };
   };
 
   config = let
-    package = getAttr config.programs.yandex-browser.package packages;
+    packageType = config.programs.yandex-browser.package;
+    package =
+      assert (builtins.elem packageType [ "stable" "beta" ]);
+      getAttr config.programs.yandex-browser.package packages;
   in
     mkIf config.programs.yandex-browser.enable {
       nixpkgs.config.permittedInsecurePackages = [ package.name ];
