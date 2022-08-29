@@ -12,18 +12,23 @@
         requests
         beautifulsoup4
       ]);
+      getInfo = with builtins; file: fromJSON (readFile file);
+      yandex-browser-beta = pkgs.callPackage ./yandex-browser.nix
+        (getInfo ./json/yandex-browser-beta.json);
+      yandex-browser-stable = pkgs.callPackage ./yandex-browser.nix
+        (getInfo ./json/yandex-browser-stable.json);
     in
     {
-      packages.x86_64-linux =
-        let
-          getInfo = with builtins; file: fromJSON (readFile file);
-        in
-        {
-          yandex-browser-beta = pkgs.callPackage ./yandex-browser.nix
-            (getInfo ./json/yandex-browser-beta.json);
-          yandex-browser-stable = pkgs.callPackage ./yandex-browser.nix
-            (getInfo ./json/yandex-browser-stable.json);
+      nixosModules = {
+        yandex-browser = import ./modules/yandex-browser.nix {
+          stable = yandex-browser-stable;
+          beta = yandex-browser-beta;
         };
+      };
+      packages.x86_64-linux = {
+        yandex-browser-beta = yandex-browser-beta;
+        yandex-browser-stable = yandex-browser-stable;
+      };
       devShell.x86_64-linux = pkgs.mkShell {
         buildInputs = [
           python
