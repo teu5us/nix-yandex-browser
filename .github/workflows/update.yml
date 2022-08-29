@@ -20,7 +20,7 @@ jobs:
         
     - uses: cachix/install-nix-action@v15
       with:
-        extra-nix-config: |
+        extra_nix_config: |
           min-free = 3000000000
           max-free = 6000000000
           
@@ -29,6 +29,9 @@ jobs:
         git config --local user.email "${{ github.actor }}@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         nix run .#update
-        git add json/yandex-browser-stable.json json/yandex-browser-beta.json
-        git commit -m "$(date) hashes"
-        git push
+        STATUS=$(git status -s)
+        if [ -n "$STATUS" ]; then
+            git add json/yandex-browser-stable.json json/yandex-browser-beta.json
+            git commit -m "$(date) hashes"
+            git push
+        fi
