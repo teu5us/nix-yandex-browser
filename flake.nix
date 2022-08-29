@@ -59,7 +59,7 @@
           set -e
           set -x
 
-          ${python}/bin/python3 json/update.py
+          ${python}/bin/python3 update/update.py
         '');
       };
     };
