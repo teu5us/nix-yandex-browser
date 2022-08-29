@@ -8,7 +8,7 @@ With automatic hash updates, I hope.
 
 ``` nix
 {
-  inputs.nixpkgs.url = "..."
+  inputs.nixpkgs.url = "...";
   inputs.yandex-browser.url = "github:Teu5us/nix-yandex-browser";
   inputs.yandex-browser.inputs.nixpkgs.follows = "nixpkgs";
 }
