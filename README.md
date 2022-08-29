@@ -6,13 +6,13 @@ With automatic hash updates, I hope.
 
 1. Add to your flake inputs:
 
-``` nix
-{
-  inputs.nixpkgs.url = "...";
-  inputs.yandex-browser.url = "github:Teu5us/nix-yandex-browser";
-  inputs.yandex-browser.inputs.nixpkgs.follows = "nixpkgs";
-}
-```
+   ``` nix
+   {
+     inputs.nixpkgs.url = "...";
+     inputs.yandex-browser.url = "github:Teu5us/nix-yandex-browser";
+     inputs.yandex-browser.inputs.nixpkgs.follows = "nixpkgs";
+   }
+   ```
 
 2. Make sure your inputs are passed to config:
 
