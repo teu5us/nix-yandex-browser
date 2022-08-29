@@ -1,4 +1,4 @@
-packages@{ stable, beta }:
+packages@{ yandex-browser-stable, yandex-browser-beta }:
 
 { config, lib, pkgs, ... }:
 
@@ -29,7 +29,7 @@ with lib;
     packageType = config.programs.yandex-browser.package;
     package =
       assert (builtins.elem packageType [ "stable" "beta" ]);
-      getAttr config.programs.yandex-browser.package packages;
+      getAttr "yandex-browser-${config.programs.yandex-browser.package}" packages;
   in
     mkIf config.programs.yandex-browser.enable {
       environment.systemPackages = [ package ];
