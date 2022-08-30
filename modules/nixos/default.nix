@@ -20,7 +20,7 @@ in
       };
       package = mkOption {
         default = "stable";
-        type = types.str;
+        type = types.enum [ "stable" "beta" "both" ];
         description = ''
           One of "stable", "beta" or "both".
         '';
@@ -28,14 +28,9 @@ in
     };
   };
 
-  config = let
-    package =
-      assert (builtins.elem cfg.package [ "stable" "beta" "both" ]);
-      if cfg.package == "both"
-        then attrValues packages
-        else getAttr "yandex-browser-${cfg.package}" packages;
-  in
-    mkIf cfg.enable {
-      environment.systemPackages = if cfg.package == "both" then package else [ package ];
+  config = mkIf cfg.enable {
+    environment.systemPackages = if cfg.package == "both"
+                                 then attrValues packages
+                                 else [ getAttr "yandex-browser-${cfg.package}" packages ];
     };
 }
