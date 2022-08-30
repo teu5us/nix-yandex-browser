@@ -6,7 +6,9 @@
   };
 
   outputs = { nixpkgs, ... }:
+
     let
+
       stableFile = ./json/yandex-browser-stable.json;
       betaFile = ./json/yandex-browser-beta.json;
 
@@ -36,15 +38,16 @@
         yandex-browser-beta = pkgs.callPackage ./package (getInfo betaFile);
         yandex-browser-stable = pkgs.callPackage ./package (getInfo stableFile);
       };
+
     in
 
     {
 
+      inherit packages;
+
       nixosModule = import ./modules/nixos packages;
 
       homeManagerModule = import ./modules/home-manager packages;
-
-      packages.x86_64-linux = packages;
 
       devShell.x86_64-linux = pkgs.mkShell {
         buildInputs = [
@@ -62,6 +65,7 @@
           ${python}/bin/python3 update/update.py
         '');
       };
+
     };
 
 }
