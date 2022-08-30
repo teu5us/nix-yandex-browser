@@ -35,14 +35,14 @@ With automatic hash updates, I hope.
       {
         # With home-manager
         home.packages = [
-          inputs.yandex-browser.packages.yandex-browser-stable
-          inputs.yandex-browser.packages.yandex-browser-beta
+          inputs.yandex-browser.yandex-browser-stable
+          inputs.yandex-browser.yandex-browser-beta
         ];
 
         # With configuration.nix
         home.packages = [
-          inputs.yandex-browser.packages.yandex-browser-stable
-          inputs.yandex-browser.packages.yandex-browser-beta
+          inputs.yandex-browser.yandex-browser-stable
+          inputs.yandex-browser.yandex-browser-beta
         ];
       }
       ```
