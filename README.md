@@ -7,6 +7,30 @@ With automatic hash updates, I hope.
 
 ## Installation
 
+### Command line
+
+1. Using `nix profile`:
+
+   ``` sh
+   # Stable version
+   nix profile install github:Teu5us/nix-yandex-browser#yandex-browser-stable
+   
+   # Beta version
+   nix profile install github:Teu5us/nix-yandex-browser#yandex-browser-beta
+   ```
+   
+2. Temporary shell using `nix shell`:
+
+   ``` sh
+   # Stable version
+   nix shell github:Teu5us/nix-yandex-browser#yandex-browser-stable
+   
+   # Beta version
+   nix shell github:Teu5us/nix-yandex-browser#yandex-browser-beta
+   ```
+
+### Configuration
+
 1. Add to your flake inputs:
 
    ``` nix
@@ -16,18 +40,16 @@ With automatic hash updates, I hope.
      inputs.yandex-browser.inputs.nixpkgs.follows = "nixpkgs";
    }
    ```
+   
+   Run `nix flake lock --update-input yandex-browser` before rebuild to get new
+   versions and hashes.
 
 2. Make sure your inputs are passed to config:
 
    * Use `specialArgs` for NixOS
    * Use `extraSpecialArgs` for home-manager
-
-3. Import the module you need using `imports` in your config:
-
-   * `inputs.yandex-browser.nixosModule`
-   * `inputs.yandex-browser.homeManagerModule`
    
-4. Install the browser:
+3. Install the browser:
 
     * Using packages:
     
@@ -48,6 +70,11 @@ With automatic hash updates, I hope.
       ```
 
     * Using modules:
+
+      Import the module you need using `imports` in your config:
+
+        * `inputs.yandex-browser.nixosModule`
+        * `inputs.yandex-browser.homeManagerModule`
 
       ```nix
       {
