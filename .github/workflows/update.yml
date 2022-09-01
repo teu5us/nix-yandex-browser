@@ -29,7 +29,7 @@ jobs:
         nix run .#update
         STATUS=$(git status -s)
         if [ -n "$STATUS" ]; then
-            git add json/yandex-browser-stable.json json/yandex-browser-beta.json
+            git add json
             git commit -m "$(date) hashes"
             git push
         fi
