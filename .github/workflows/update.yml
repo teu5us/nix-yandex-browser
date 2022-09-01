@@ -22,6 +22,11 @@ jobs:
           min-free = 3000000000
           max-free = 6000000000
           
+    - uses: cachix/cachix-action@v10
+      with:
+        name: nix-yandex-browser
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          
     - run: |
         set -x
         git config --local user.email "${{ github.actor }}@users.noreply.github.com"
