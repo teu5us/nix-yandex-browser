@@ -113,8 +113,9 @@ in
   ###### implementation
 
   config = lib.mkIf cfg.enable {
-    environment.etc."opt/yandex/browser/policies/managed/managed_policies.json".text =
-      builtins.toJSON (cfg.extraOpts // defaultProfile);
-    environment.etc = lib.listToAttrs (map idToFile cfg.extensions);
+    environment.etc = {
+      "opt/yandex/browser/policies/managed/managed_policies.json".text =
+        builtins.toJSON (cfg.extraOpts // defaultProfile);
+    } // lib.listToAttrs (map idToFile cfg.extensions);
   };
 }
