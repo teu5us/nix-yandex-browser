@@ -5,12 +5,22 @@ with lib;
 let
   cfg = config.programs.yandex-browser;
 
+  idToFile = id:
+    {
+      name = "opt/yandex/browser/extensions/${id}.json";
+      value = { text = ''
+        {
+          external_update_url: "https://clients2.google.com/service/update2/crx"
+        }
+      ''; }
+    };
+
   defaultProfile = filterAttrs (k: v: v != null) {
     HomepageLocation = cfg.homepageLocation;
     DefaultSearchProviderEnabled = cfg.defaultSearchProviderEnabled;
     DefaultSearchProviderSearchURL = cfg.defaultSearchProviderSearchURL;
     DefaultSearchProviderSuggestURL = cfg.defaultSearchProviderSuggestURL;
-    ExtensionInstallForcelist = cfg.extensions;
+    # ExtensionInstallForcelist = cfg.extensions;
   };
 in
 
@@ -104,5 +114,6 @@ in
   config = lib.mkIf cfg.enable {
     environment.etc."opt/yandex/browser/policies/managed/managed_policies.json".text =
       builtins.toJSON (cfg.extraOpts // defaultProfile);
+    environment.etc = lib.listToAttrs (map idToFile cfg.extensions);
   };
 }
