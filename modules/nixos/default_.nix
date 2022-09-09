@@ -5,22 +5,21 @@ with lib;
 let
   cfg = config.programs.yandex-browser;
 
-  idToFile = id:
-    {
-      name = "opt/yandex/browser/extensions/${id}.json";
-      value = {
-        text = ''
-          {
-            external_update_url: "https://clients2.google.com/service/update2/crx"
-          }
-        ''; };
-    };
+  idToSetting = id:
+    { name = id; value = { "installation_mode" = "force_installed"; }; };
 
   defaultProfile = filterAttrs (k: v: v != null) {
     HomepageLocation = cfg.homepageLocation;
     DefaultSearchProviderEnabled = cfg.defaultSearchProviderEnabled;
     DefaultSearchProviderSearchURL = cfg.defaultSearchProviderSearchURL;
     DefaultSearchProviderSuggestURL = cfg.defaultSearchProviderSuggestURL;
+    ExtensionSettings = {
+      "*" = {
+        "installation_mode" = if cfg.blockExtensions == true
+                              then "allowed"
+                              else "blocked";
+      };
+    } // lib.listToAttrs (map idToSetting cfg.extensions);
     # ExtensionInstallForcelist = cfg.extensions;
   };
 in
@@ -31,6 +30,17 @@ in
   options = {
     programs.yandex-browser = {
       enable = mkEnableOption "<command>yandex-browser</command> policies";
+
+      blockExtensions = mkOption {
+        type = types.bool;
+        description = lib.mkDoc ''
+          Whether unlisted extensions should be blocked.
+        '';
+        default = false;
+        example = literalExpression ''
+          true
+        '';
+      };
 
       extensions = mkOption {
         type = types.listOf types.str;
@@ -113,9 +123,7 @@ in
   ###### implementation
 
   config = lib.mkIf cfg.enable {
-    environment.etc = {
-      "opt/yandex/browser/policies/managed/managed_policies.json".text =
+    environment.etc."opt/yandex/browser/policies/managed/managed_policies.json".text =
         builtins.toJSON (cfg.extraOpts // defaultProfile);
-    } // lib.listToAttrs (map idToFile cfg.extensions);
   };
 }
