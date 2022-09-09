@@ -28,6 +28,6 @@ in
 
   config = lib.mkIf cfg.enable {
     environment.etc."opt/yandex/browser/policies/managed/managed_policies.json".text =
-      builtins.toJSON (builtins.toJSON cfgChromium.extraOpts // defaultProfile);
+      builtins.toJSON (cfgChromium.extraOpts // defaultProfile);
   };
 }
