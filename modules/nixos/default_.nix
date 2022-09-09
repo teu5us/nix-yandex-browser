@@ -27,7 +27,7 @@ in
   ###### implementation
 
   config = lib.mkIf cfg.enable {
-    environment.etc."yandex-browser/policies/managed/managed_policies.json".text = builtins.toJSON defaultProfile;
-    environment.etc."yandex-browser/policies/managed/extra.json".text = builtins.toJSON cfgChromium.extraOpts;
+    environment.etc."opt/yandex/browser/policies/managed/default.json".text = builtins.toJSON defaultProfile;
+    environment.etc."opt/yandex/browser/policies/managed/extra.json".text = builtins.toJSON cfgChromium.extraOpts;
   };
 }
