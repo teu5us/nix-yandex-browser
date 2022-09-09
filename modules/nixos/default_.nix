@@ -6,7 +6,10 @@ let
   cfg = config.programs.yandex-browser;
 
   idToSetting = id:
-    { name = id; value = { "installation_mode" = "force_installed"; }; };
+    { name = id; value = {
+        "installation_mode" = "force_installed";
+        "update_url" = "https://clients2.google.com/service/update2/crx";
+      }; };
 
   defaultProfile = filterAttrs (k: v: v != null) {
     HomepageLocation = cfg.homepageLocation;
@@ -16,8 +19,8 @@ let
     ExtensionSettings = {
       "*" = {
         "installation_mode" = if cfg.blockExtensions == true
-                              then "allowed"
-                              else "blocked";
+                              then "blocked"
+                              else "allowed";
       };
     } // lib.listToAttrs (map idToSetting cfg.extensions);
     # ExtensionInstallForcelist = cfg.extensions;
