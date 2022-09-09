@@ -8,11 +8,12 @@ let
   idToFile = id:
     {
       name = "opt/yandex/browser/extensions/${id}.json";
-      value = { text = ''
-        {
-          external_update_url: "https://clients2.google.com/service/update2/crx"
-        }
-      ''; }
+      value = {
+        text = ''
+          {
+            external_update_url: "https://clients2.google.com/service/update2/crx"
+          }
+        ''; };
     };
 
   defaultProfile = filterAttrs (k: v: v != null) {
