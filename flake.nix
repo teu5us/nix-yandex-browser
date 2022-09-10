@@ -45,7 +45,7 @@
 
       inherit (packages) yandex-browser-stable yandex-browser-beta;
 
-      nixosModule = import ./modules/nixos/default_.nix;
+      nixosModule = import ./modules/nixos/default.nix packages;
 
       homeManagerModule = import ./modules/home-manager packages;
 
