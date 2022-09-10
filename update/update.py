@@ -83,15 +83,13 @@ def process_url(url_name):
         with open(json_file, 'r') as f:
             json_data = json.load(f)
             old_version = json_data['version']
-            old_cid = json_data['cid']
-            cid_stored = is_stored(old_cid)
         content = response.text
         soup = BeautifulSoup(content, 'html.parser')
         anchor = r'\b' + url_name + r'_.*'
         a = soup.find('a', string=re.compile(anchor))
         href = a.get('href')
         version = href.split('_')[1]
-        if version == old_version and cid_stored:
+        if version == old_version:
             print(f'No update required for {url_name}')
         else:
             url = _url + href
@@ -105,7 +103,8 @@ def process_url(url_name):
                     'cid': cid
                 })
                 f.write(json_string)
-            store(car_path)
+            if not is_stored(cid):
+                store(car_path)
     else:
         print('Error getting repository page')
 
