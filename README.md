@@ -38,7 +38,7 @@ NOTE: this branch is backed by web3.storage, so source `.deb`s should be fine ev
    ``` nix
    {
      inputs.nixpkgs.url = "...";
-     inputs.yandex-browser.url = "github:Teu5us/nix-yandex-browser";
+     inputs.yandex-browser.url = "github:Teu5us/nix-yandex-browser?ref=web3";
      inputs.yandex-browser.inputs.nixpkgs.follows = "nixpkgs";
    }
    ```
