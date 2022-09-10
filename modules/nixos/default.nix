@@ -37,7 +37,7 @@ in
         description = lib.mkDoc ''
           Extension IDs to be blocklisted.
         '';
-        default = false;
+        default = [];
         example = literalExpression ''
           [ "*" ]
         '';
@@ -48,7 +48,7 @@ in
         description = lib.mkDoc ''
           Extensions IDs not subject to the blocklist.
         '';
-        default = false;
+        default = [];
         example = literalExpression ''
           [ "*" ]
         '';
