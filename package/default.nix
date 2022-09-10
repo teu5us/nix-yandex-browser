@@ -49,6 +49,7 @@
 , pname
 , version
 , sha256
+, cid
 , extensions ? []
 }:
 
@@ -77,7 +78,8 @@ let
     inherit pname version;
 
     src = fetchurl {
-      url = "http://repo.yandex.ru/yandex-browser/deb/pool/main/y/${pname}/${pname}_${version}_amd64.deb";
+      url = "https://dweb.link/ipfs/${cid}/${pname}_${version}_amd64.deb";
+      # url = "http://repo.yandex.ru/yandex-browser/deb/pool/main/y/${pname}/${pname}_${version}_amd64.deb";
       sha256 = sha256;
     };
 

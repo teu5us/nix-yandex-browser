@@ -34,6 +34,8 @@
         beautifulsoup4
       ]);
 
+      node = pkgs.nodejs-16_x;
+
       packages = {
         yandex-browser-beta = pkgs.callPackage ./package (getInfo betaFile);
         yandex-browser-stable = pkgs.callPackage ./package (getInfo stableFile);
@@ -52,6 +54,7 @@
       devShell.x86_64-linux = pkgs.mkShell {
         buildInputs = [
           python
+          node
         ];
       };
 
@@ -62,6 +65,7 @@
           set -e
           set -x
 
+          export NPX=${node}/bin/npx
           ${python}/bin/python3 update/update.py
         '');
       };
