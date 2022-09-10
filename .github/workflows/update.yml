@@ -4,33 +4,34 @@ on:
   schedule:
     - cron: "17 9,21 * * *"
   workflow_dispatch:
-  
+
 jobs:
 
   update-hashes:
     name: Update Yandex.Browser hashes
     runs-on: ubuntu-latest
     steps:
-    
+
     - uses: actions/checkout@v3
       with:
         fetch-depth: 1
-        
+
     - uses: cachix/install-nix-action@v15
       with:
         extra_nix_config: |
           min-free = 3000000000
           max-free = 6000000000
-          
+
     - uses: cachix/cachix-action@v10
       with:
         name: nix-yandex-browser
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-          
+
     - run: |
         set -x
         git config --local user.email "${{ github.actor }}@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
+        nix shell nixpkgs\#nodejs-16_x -c echo "${{ secrets.WEB3_TOKEN }}" | npx @web3-storage/w3 token
         nix run .#update
         STATUS=$(git status -s)
         if [ -n "$STATUS" ]; then
