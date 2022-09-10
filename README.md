@@ -71,20 +71,24 @@ With automatic hash updates, I hope.
 
     * Using modules:
 
-      Import the module you need using `imports` in your config:
-
-        * `inputs.yandex-browser.nixosModule`
-        * `inputs.yandex-browser.homeManagerModule`
-
       ```nix
       { config, inputs, ... }: {
+
+        imports = [
+           # for NixOS
+           inputs.yandex-browser.nixosModule
+
+           # for home-manager
+           inputs.yandex-browser.homeManagerModule
+        ];
+
         programs.yandex-browser = {
           enable = true;
           # default is "stable", you can also have "both"
           package = "beta";
           extensions = config.programs.chromium.extensions;
 
-          # the following are only for nixosModule
+          # NOTE: the following are only for nixosModule
           extensionInstallBlocklist = [
             # disable the "buggy" extension in beta
             "imjepfoebignfgmogbbghpbkbcimgfpd"
@@ -110,6 +114,7 @@ With automatic hash updates, I hope.
             "NtpContentDisabled" = true;
           };
         };
+
       }
       ```
 
