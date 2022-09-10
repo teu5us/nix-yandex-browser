@@ -5,6 +5,8 @@ With automatic hash updates, I hope.
 * `yandex-browser-stable` provides the `yandex-browser` executable
 * `yandex-browser-beta` provides the `yandex-browser-beta` executable
 
+NOTE: this branch is backed by web3.storage, so source `.deb`s should be fine even after they are removed from the Yandex repository.
+
 ## Installation
 
 ### Command line
