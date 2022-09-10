@@ -5,6 +5,8 @@ With automatic hash updates, I hope.
 * `yandex-browser-stable` provides the `yandex-browser` executable
 * `yandex-browser-beta` provides the `yandex-browser-beta` executable
 
+Try the IPFS backed [web3](https://github.com/teu5us/nix-yandex-browser/tree/web3) branch if you do not plan to track the browser updates.
+
 ## Installation
 
 ### Command line
