@@ -14,17 +14,17 @@ With automatic hash updates, I hope.
    ``` sh
    # Stable version
    nix profile install github:Teu5us/nix-yandex-browser#yandex-browser-stable
-   
+
    # Beta version
    nix profile install github:Teu5us/nix-yandex-browser#yandex-browser-beta
    ```
-   
+
 2. Temporary shell using `nix shell`:
 
    ``` sh
    # Stable version
    nix shell github:Teu5us/nix-yandex-browser#yandex-browser-stable
-   
+
    # Beta version
    nix shell github:Teu5us/nix-yandex-browser#yandex-browser-beta
    ```
@@ -40,7 +40,7 @@ With automatic hash updates, I hope.
      inputs.yandex-browser.inputs.nixpkgs.follows = "nixpkgs";
    }
    ```
-   
+
    Run `nix flake lock --update-input yandex-browser` before rebuild to get new
    versions and hashes.
 
@@ -48,11 +48,11 @@ With automatic hash updates, I hope.
 
    * Use `specialArgs` for NixOS
    * Use `extraSpecialArgs` for home-manager
-   
+
 3. Install the browser:
 
     * Using packages:
-    
+
       ```nix
       {
         # With home-manager
@@ -77,9 +77,40 @@ With automatic hash updates, I hope.
         * `inputs.yandex-browser.homeManagerModule`
 
       ```nix
-      {
-        programs.yandex-browser.enable = true;
-        # default is "stable", you can also have "both"
-        programs.yandex-browser.package = "beta";
+      { config, inputs, ... }: {
+        programs.yandex-browser = {
+          enable = true;
+          # default is "stable", you can also have "both"
+          package = "beta";
+          extensions = config.programs.chromium.extensions;
+
+          # the following are only for nixosModule
+          extensionInstallBlocklist = [
+            # disable the "buggy" extension in beta
+            "imjepfoebignfgmogbbghpbkbcimgfpd"
+          ];
+          homepageLocation = "https://ya.ru";
+          extraOpts = {
+            "HardwareAccelerationModeEnabled" = true;
+            "DefaultBrowserSettingEnabled" = false;
+            "DeveloperToolsAvailability" = 0;
+            "CrashesReporting" = false;
+            "StatisticsReporting" = false;
+            "DistrStatisticsReporting" = false;
+            "UpdateAllowed" = false;
+            "ImportExtensions" = false;
+            "BackgroundModeEnabled" = false;
+            "PasswordManagerEnabled" = false;
+            "TranslateEnabled" = false;
+            "WordTranslatorDisabled" = true;
+            "YandexCloudLanguageDetectEnabled" = false;
+            "CloudDocumentsDisabled" = true;
+            "DefaultGeolocationSetting" = 1;
+            "NtpAdsDisabled" = true;
+            "NtpContentDisabled" = true;
+          };
+        };
       }
       ```
+
+      Make sure to avoid any policies to force install extensions, as those will only prevent extensions from being installed.
