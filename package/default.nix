@@ -39,6 +39,7 @@
 , libopus
 , libpulseaudio
 , libuuid
+, libva
 , libxshmfence
 , mesa
 , nspr
@@ -46,6 +47,7 @@
 , systemd
 , at-spi2-atk
 , at-spi2-core
+, makeWrapper
 , pname
 , version
 , sha256
@@ -84,6 +86,7 @@ let
     nativeBuildInputs = [
       autoPatchelfHook
       wrapGAppsHook
+      makeWrapper
     ];
 
     buildInputs = [
@@ -123,6 +126,7 @@ let
       libnotify
       libopus
       libuuid
+      libva
       libxcb
       libxshmfence
       mesa
@@ -143,7 +147,16 @@ let
       set +e
       cp $TMP/ya/{usr/share,opt} $out/ -R
       substituteInPlace $out/share/applications/${desktopName}.desktop --replace /usr/ $out/
-      ln -sf $out/opt/yandex/${folderName}/yandex_browser $out/bin/${binName}
+
+      # This is from original nixpkgs source
+      # ln -sf $out/opt/yandex/${folderName}/yandex_browser $out/bin/${pname}
+
+      # Wrap the executable instead
+      makeWrapper $out/opt/yandex/${folderName}/yandex_browser "$out/bin/${pname}" \
+        --set "LD_LIBRARY_PATH" "${lib.concatStringsSep ":" runtimeDependencies}" \
+        --add-flags ${lib.escapeShellArg "--use-gl=desktop --enable-features=VaapiVideoDecoder,VaapiVideoEncoder"}
+
+      # install extensions
       mkdir -p $out/opt/yandex/${folderName}/Extensions
       ${lib.concatMapStringsSep "\n" extensionJsonScript extensions}
     '';
