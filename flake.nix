@@ -63,6 +63,10 @@
           set -x
 
           ${python}/bin/python3 update/update.py
+          export STRINGS_CMD=${binutils}/bin/stings
+          export STABLE=${packages.yandex-browser-stable}
+          export BETA=${packages.yandex-browser-beta}
+          ${python}/bin/python3 update/codecs.py
         '');
       };
 
