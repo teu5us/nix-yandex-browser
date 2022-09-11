@@ -48,6 +48,7 @@
 , at-spi2-atk
 , at-spi2-core
 , makeWrapper
+, vivaldi-ffmpeg-codecs
 , pname
 , version
 , sha256
@@ -58,6 +59,17 @@ let
   desktopName = if pname == "yandex-browser-stable" then "yandex-browser" else pname;
   folderName = if pname == "yandex-browser-stable" then "browser" else "browser-beta";
   binName = desktopName;
+
+  codecsAttrs = builtins.fromJSON
+    (builtins.readFile (../json + "/${pname}-codecs.json"));
+
+  codecs = vivaldi-ffmpeg-codecs.overrideAttrs (oa: {
+    version = codecsAttrs.version;
+    src = fetchurl {
+      url = codecsAttrs.url;
+      sha256 = codecsAttrs.sha256;
+    };
+  });
 
   extensionJsonScript = id:
     let
@@ -156,6 +168,8 @@ let
         --set "LD_LIBRARY_PATH" "${lib.concatStringsSep ":" runtimeDependencies}" \
         --add-flags ${lib.escapeShellArg "--use-gl=desktop --enable-features=VaapiVideoDecoder,VaapiVideoEncoder"}
 
+      ln -s ${codecs}/lib/libffmpeg.so $out/opt/yandex/${folderName}/libffmpeg.so
+
       # install extensions
       mkdir -p $out/opt/yandex/${folderName}/Extensions
       ${lib.concatMapStringsSep "\n" extensionJsonScript extensions}
@@ -165,6 +179,7 @@ let
       libpulseaudio
       curl
       systemd
+      codecs
     ] ++ buildInputs;
 
     meta = with lib; {
