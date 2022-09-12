@@ -1,4 +1,4 @@
-name: "Update Yandex.Browser hashes"
+name: "Update Yandex.Browser hashes (web3)"
 
 on:
   schedule:
