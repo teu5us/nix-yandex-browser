@@ -55,19 +55,30 @@
         ];
       };
 
-      apps.x86_64-linux.update = {
-        type = "app";
-        program = toString (pkgs.writeScript "update" ''
-          #!/usr/bin/env bash
-          set -e
-          set -x
+      apps.x86_64-linux = {
+        update_browser = {
+          type = "app";
+          program = toString (pkgs.writeScript "update_browser" ''
+            #!/usr/bin/env bash
+            set -e
+            set -x
 
-          ${python}/bin/python3 update/update.py
-          export STRINGS_CMD=${pkgs.binutils}/bin/stings
-          export STABLE=${packages.yandex-browser-stable}
-          export BETA=${packages.yandex-browser-beta}
-          ${python}/bin/python3 update/codecs.py
-        '');
+            ${python}/bin/python3 update/update.py
+          '');
+        };
+        update_codecs = {
+          type = "app";
+          program = toString (pkgs.writeScript "update_codecs" ''
+            #!/usr/bin/env bash
+            set -e
+            set -x
+
+            export STRINGS_CMD=${pkgs.binutils}/bin/stings
+            export STABLE=${packages.yandex-browser-stable}
+            export BETA=${packages.yandex-browser-beta}
+            ${python}/bin/python3 update/codecs.py
+          '');
+        };
       };
 
     };
