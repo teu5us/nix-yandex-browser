@@ -166,6 +166,7 @@ let
       # ln -sf $out/opt/yandex/${folderName}/yandex_browser $out/bin/${pname}
 
       # Wrap the executable instead
+      chmod +x $out/opt/yandex/${folderName}/yandex-browser
       makeWrapper $out/opt/yandex/${folderName}/yandex-browser "$out/bin/${pname}" \
         --set "LD_LIBRARY_PATH" "${lib.concatStringsSep ":" runtimeDependencies}" \
         --add-flags ${lib.escapeShellArg "--use-gl=desktop --enable-features=VaapiVideoDecoder,VaapiVideoEncoder"}
