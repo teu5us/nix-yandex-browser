@@ -64,7 +64,7 @@ NOTE: this branch is backed by web3.storage, so source `.deb`s should be fine ev
         ];
 
         # With configuration.nix
-        home.packages = [
+        environment.systemPackages = [
           inputs.yandex-browser.yandex-browser-stable
           inputs.yandex-browser.yandex-browser-beta
         ];
