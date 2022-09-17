@@ -64,7 +64,7 @@ Try the IPFS backed [web3](https://github.com/teu5us/nix-yandex-browser/tree/web
         ];
 
         # With configuration.nix
-        home.packages = [
+        environment.systemPackages = [
           inputs.yandex-browser.yandex-browser-stable
           inputs.yandex-browser.yandex-browser-beta
         ];
