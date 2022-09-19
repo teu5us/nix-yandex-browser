@@ -43,11 +43,14 @@
 
     {
 
-      inherit (packages) yandex-browser-stable yandex-browser-beta;
+      packages.x86_64-linux = {
+        inherit (packages) yandex-browser-stable yandex-browser-beta;
+      };
 
-      nixosModule = import ./modules/nixos/default.nix packages;
-
-      homeManagerModule = import ./modules/home-manager packages;
+      nixosModules = {
+        system = import ./modules/nixos/default.nix packages;
+        home-manager = import ./modules/home-manager packages;
+      };
 
       devShell.x86_64-linux = pkgs.mkShell {
         buildInputs = [
