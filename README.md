@@ -80,10 +80,10 @@ Try the IPFS backed [web3](https://github.com/teu5us/nix-yandex-browser/tree/web
 
         imports = [
            # for NixOS
-           inputs.yandex-browser.nixosModule
+           inputs.yandex-browser.nixosModules.system
 
            # for home-manager
-           inputs.yandex-browser.homeManagerModule
+           inputs.yandex-browser.nixosModules.home-manager
         ];
 
         programs.yandex-browser = {
