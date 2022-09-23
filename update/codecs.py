@@ -97,6 +97,9 @@ if __name__ == '__main__':
         print(f'Processing {browser}')
         links = get_links(browser)
         json_data = process_links(links)
-        with open(f'{OUTPATH}/{browser}-codecs.json', "w") as h:
-            json_string = json.dumps(json_data)
-            h.write(json_string)
+        if json_data:
+            with open(f'{OUTPATH}/{browser}-codecs.json', "w") as h:
+                json_string = json.dumps(json_data)
+                h.write(json_string)
+        else:
+            print("Error fetching codecs")
