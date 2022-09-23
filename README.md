@@ -80,10 +80,10 @@ NOTE: this branch is backed by web3.storage, so source `.deb`s should be fine ev
 
         imports = [
            # for NixOS
-           inputs.yandex-browser.nixosModule
+           inputs.yandex-browser.nixosModules.system
 
            # for home-manager
-           inputs.yandex-browser.homeManagerModule
+           inputs.yandex-browser.nixosModules.home-manager
         ];
 
         programs.yandex-browser = {
