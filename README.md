@@ -7,6 +7,8 @@ With automatic hash updates, I hope.
 
 Try the IPFS backed [web3](https://github.com/teu5us/nix-yandex-browser/tree/web3) branch if you do not plan to track the browser updates.
 
+**Note** that this flake imports nixpkgs with `allowUnfree = true` and adds both provided browsers as `permittedInsecurePackages`.
+
 ## Installation
 
 ### Command line
@@ -59,14 +61,14 @@ Try the IPFS backed [web3](https://github.com/teu5us/nix-yandex-browser/tree/web
       {
         # With home-manager
         home.packages = [
-          inputs.yandex-browser.yandex-browser-stable
-          inputs.yandex-browser.yandex-browser-beta
+          inputs.yandex-browser.packages.x86_64-linux.yandex-browser-stable
+          inputs.yandex-browser.packages.x86_64-linux.yandex-browser-beta
         ];
 
         # With configuration.nix
         environment.systemPackages = [
-          inputs.yandex-browser.yandex-browser-stable
-          inputs.yandex-browser.yandex-browser-beta
+          inputs.yandex-browser.packages.x86_64-linux.yandex-browser-stable
+          inputs.yandex-browser.packages.x86_64-linux.yandex-browser-beta
         ];
       }
       ```
