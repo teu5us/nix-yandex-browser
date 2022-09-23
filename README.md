@@ -7,6 +7,8 @@ With automatic hash updates, I hope.
 
 NOTE: this branch is backed by web3.storage, so source `.deb`s should be fine even after they are removed from the Yandex repository.
 
+**Note** that this flake imports nixpkgs with `allowUnfree = true` and adds both provided browsers as `permittedInsecurePackages`.
+
 ## Installation
 
 ### Command line
@@ -59,14 +61,14 @@ NOTE: this branch is backed by web3.storage, so source `.deb`s should be fine ev
       {
         # With home-manager
         home.packages = [
-          inputs.yandex-browser.yandex-browser-stable
-          inputs.yandex-browser.yandex-browser-beta
+          inputs.yandex-browser.packages.x86_64-linux.yandex-browser-stable
+          inputs.yandex-browser.packages.x86_64-linux.yandex-browser-beta
         ];
 
         # With configuration.nix
         environment.systemPackages = [
-          inputs.yandex-browser.yandex-browser-stable
-          inputs.yandex-browser.yandex-browser-beta
+          inputs.yandex-browser.packages.x86_64-linux.yandex-browser-stable
+          inputs.yandex-browser.packages.x86_64-linux.yandex-browser-beta
         ];
       }
       ```
