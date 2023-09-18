@@ -53,8 +53,10 @@ def get_links(name):
             versions
         ))[0]
         chrver_no_patch = '.'.join(chrver.split('.')[0:-1])
-        codec_sources = get_codec_sources()[chrver_no_patch]
-        return codec_sources
+        all_codec_sources = get_codec_sources()
+        if chrver_no_patch in all_codec_sources:
+            return all_codec_sources[chrver_no_patch]
+        return []
     else:
         print(f'Failed to read file {browser_cmd}')
 
@@ -72,6 +74,8 @@ def prefetch_url(url):
 
 
 def process_links(url_list):
+    if len(url_list) == 0:
+        return None
     url_count = len(url_list)
     failed = 0
     for url in url_list:
@@ -97,7 +101,7 @@ if __name__ == '__main__':
         print(f'Processing {browser}')
         links = get_links(browser)
         json_data = process_links(links)
-        if json_data:
+        if json_data is not None:
             with open(f'{OUTPATH}/{browser}-codecs.json', "w") as h:
                 json_string = json.dumps(json_data)
                 h.write(json_string)
