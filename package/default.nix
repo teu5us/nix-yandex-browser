@@ -49,6 +49,7 @@
 , at-spi2-core
 , makeWrapper
 , vivaldi-ffmpeg-codecs
+, squashfsTools
 , pname
 , version
 , sha256
@@ -63,13 +64,30 @@ let
   codecsAttrs = builtins.fromJSON
     (builtins.readFile (../json + "/${pname}-codecs.json"));
 
-  codecs = vivaldi-ffmpeg-codecs.overrideAttrs (oa: {
-    version = codecsAttrs.version;
-    src = fetchurl {
-      url = codecsAttrs.url;
-      sha256 = codecsAttrs.sha256;
-    };
-  });
+  codecs = if lib.hasAttr "path" codecsAttrs
+           then stdenv.mkDerivation {
+             name = "yandex-browser-codecs";
+             version = "${codecsAttrs.version}";
+             src = fetchurl {
+               url = codecsAttrs.url;
+               sha256 = codecsAttrs.sha256;
+             };
+             dontUnpack = true;
+             buildPhase = ''
+              ${squashfsTools}/bin/unsquashfs -f -d . $src
+             '';
+             installPhase = ''
+              mkdir -p $out/lib
+              cp ./${codecsAttrs.path} $out/lib/libffmpeg.so
+             '';
+           }
+           else vivaldi-ffmpeg-codecs.overrideAttrs (oa: {
+             version = codecsAttrs.version;
+             src = fetchurl {
+               url = codecsAttrs.url;
+               sha256 = codecsAttrs.sha256;
+             };
+           });
 
   extensionJsonScript = id:
     let
