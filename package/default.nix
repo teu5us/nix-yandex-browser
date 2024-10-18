@@ -1,59 +1,60 @@
-{ stdenv
-, lib
-, fetchurl
-, autoPatchelfHook
-, wrapGAppsHook
-, flac
-, gnome2
-, harfbuzzFull
-, nss
-, snappy
-, xdg-utils
-, xorg
-, alsa-lib
-, atk
-, cairo
-, cups
-, curl
-, dbus
-, expat
-, fontconfig
-, freetype
-, gdk-pixbuf
-, glib
-, gtk3
-, libX11
-, libxcb
-, libXScrnSaver
-, libXcomposite
-, libXcursor
-, libXdamage
-, libXext
-, libXfixes
-, libXi
-, libXrandr
-, libXrender
-, libXtst
-, libdrm
-, libnotify
-, libopus
-, libpulseaudio
-, libuuid
-, libva
-, libxshmfence
-, mesa
-, nspr
-, pango
-, systemd
-, at-spi2-atk
-, at-spi2-core
-, makeWrapper
-, vivaldi-ffmpeg-codecs
-, squashfsTools
-, pname
-, version
-, sha256
-, extensions ? []
+{
+  stdenv,
+  lib,
+  fetchurl,
+  autoPatchelfHook,
+  wrapGAppsHook,
+  flac,
+  gnome2,
+  harfbuzzFull,
+  nss,
+  snappy,
+  xdg-utils,
+  xorg,
+  alsa-lib,
+  atk,
+  cairo,
+  cups,
+  curl,
+  dbus,
+  expat,
+  fontconfig,
+  freetype,
+  gdk-pixbuf,
+  glib,
+  gtk3,
+  libX11,
+  libxcb,
+  libXScrnSaver,
+  libXcomposite,
+  libXcursor,
+  libXdamage,
+  libXext,
+  libXfixes,
+  libXi,
+  libXrandr,
+  libXrender,
+  libXtst,
+  libdrm,
+  libnotify,
+  libopus,
+  libpulseaudio,
+  libuuid,
+  libva,
+  libxshmfence,
+  mesa,
+  nspr,
+  pango,
+  systemd,
+  at-spi2-atk,
+  at-spi2-core,
+  makeWrapper,
+  vivaldi-ffmpeg-codecs,
+  squashfsTools,
+  pname,
+  version,
+  sha256,
+  extensions ? [ ],
 }:
 
 let
@@ -61,49 +62,53 @@ let
   folderName = if pname == "yandex-browser-stable" then "browser" else "browser-beta";
   binName = desktopName;
 
-  codecsAttrs = builtins.fromJSON
-    (builtins.readFile (../json + "/${pname}-codecs.json"));
+  codecsAttrs = builtins.fromJSON (builtins.readFile (../json + "/${pname}-codecs.json"));
 
-  codecs = if lib.hasAttr "path" codecsAttrs
-           then stdenv.mkDerivation {
-             name = "yandex-browser-codecs";
-             version = "${codecsAttrs.version}";
-             src = fetchurl {
-               url = codecsAttrs.url;
-               sha256 = codecsAttrs.sha256;
-             };
-             dontUnpack = true;
-             buildPhase = ''
-              ${squashfsTools}/bin/unsquashfs -f -d . $src
-             '';
-             installPhase = ''
-              mkdir -p $out/lib
-              cp ./${codecsAttrs.path} $out/lib/libffmpeg.so
-             '';
-           }
-           else vivaldi-ffmpeg-codecs.overrideAttrs (oa: {
-             version = codecsAttrs.version;
-             src = fetchurl {
-               url = codecsAttrs.url;
-               sha256 = codecsAttrs.sha256;
-             };
-           });
+  codecs =
+    if lib.hasAttr "path" codecsAttrs then
+      stdenv.mkDerivation {
+        name = "yandex-browser-codecs";
+        version = "${codecsAttrs.version}";
+        src = fetchurl {
+          url = codecsAttrs.url;
+          sha256 = codecsAttrs.sha256;
+        };
+        dontUnpack = true;
+        buildPhase = ''
+          ${squashfsTools}/bin/unsquashfs -f -d . $src
+        '';
+        installPhase = ''
+          mkdir -p $out/lib
+          cp ./${codecsAttrs.path} $out/lib/libffmpeg.so
+        '';
+      }
+    else
+      vivaldi-ffmpeg-codecs.overrideAttrs (oa: {
+        version = codecsAttrs.version;
+        src = fetchurl {
+          url = codecsAttrs.url;
+          sha256 = codecsAttrs.sha256;
+        };
+      });
 
-  extensionJsonScript = id:
+  extensionJsonScript =
+    id:
     let
       split = lib.splitString ";" id;
       id' = lib.elemAt split 0;
-      updateUrl = if lib.length split > 1
-                  then lib.elemAt split 1
-                  else "https://clients2.google.com/service/update2/crx";
+      updateUrl =
+        if lib.length split > 1 then
+          lib.elemAt split 1
+        else
+          "https://clients2.google.com/service/update2/crx";
     in
-      ''
-        cat > $out/opt/yandex/${folderName}/Extensions/${id'}.json <<EOF
-        {
-          "external_update_url": "${updateUrl}"
-        }
-        EOF
-      '';
+    ''
+      cat > $out/opt/yandex/${folderName}/Extensions/${id'}.json <<EOF
+      {
+        "external_update_url": "${updateUrl}"
+      }
+      EOF
+    '';
 
   browser = stdenv.mkDerivation rec {
     inherit pname version;
@@ -197,12 +202,14 @@ let
       ${lib.concatMapStringsSep "\n" extensionJsonScript extensions}
     '';
 
-    runtimeDependencies = map lib.getLib [
-      libpulseaudio
-      curl
-      systemd
-      codecs
-    ] ++ buildInputs;
+    runtimeDependencies =
+      map lib.getLib [
+        libpulseaudio
+        curl
+        systemd
+        codecs
+      ]
+      ++ buildInputs;
 
     meta = with lib; {
       description = "Yandex Web Browser";
@@ -214,10 +221,11 @@ let
 
       knownVulnerabilities = [
         ''
-      Trusts a Russian government issued CA certificate for some websites.
-      See https://habr.com/en/company/yandex/blog/655185/ (Russian) for details.
-      ''
+          Trusts a Russian government issued CA certificate for some websites.
+          See https://habr.com/en/company/yandex/blog/655185/ (Russian) for details.
+        ''
       ];
     };
   };
-in browser
+in
+browser
