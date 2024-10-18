@@ -193,9 +193,9 @@ let
         --add-flags ${lib.escapeShellArg "--use-gl=desktop --enable-features=VaapiVideoDecoder,VaapiVideoEncoder"}
 
       ln -s ${codecs}/lib/libffmpeg.so $out/opt/yandex/${folderName}/libffmpeg.so
-      sed -i '68,74 s/^/#/' $out/opt/yandex/${folderName}/${binName}
-      sed -e '75iexport FOUND_FFMPEG=1' -i $out/opt/yandex/${folderName}/${binName}
-      sed -e '76iexport THE_BEST_FFMPEG_LIBRARY=''$HERE/libffmpeg.so' -i $out/opt/yandex/${folderName}/${binName}
+      # sed -i '68,74 s/^/#/' $out/opt/yandex/${folderName}/${binName}
+      sed -e '90iexport FOUND_FFMPEG=1' -i $out/opt/yandex/${folderName}/${binName}
+      sed -e '91iexport THE_BEST_FFMPEG_LIBRARY=''$HERE/libffmpeg.so' -i $out/opt/yandex/${folderName}/${binName}
 
       # install extensions
       mkdir -p $out/opt/yandex/${folderName}/Extensions
