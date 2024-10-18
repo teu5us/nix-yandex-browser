@@ -201,7 +201,7 @@ let
       chmod +x $out/opt/yandex/${folderName}/${binName}
       makeWrapper $out/opt/yandex/${folderName}/${binName} "$out/bin/${pname}" \
         --set "LD_LIBRARY_PATH" "${lib.concatStringsSep ":" runtimeDependencies}" \
-        --add-flags ${lib.escapeShellArg "--use-gl=desktop --enable-features=VaapiVideoDecoder,VaapiVideoEncoder"}
+        --add-flags ${lib.escapeShellArg "--gl=egl-angle --angle=opengl --enable-features=VaapiVideoDecoder,VaapiVideoEncoder"}
 
       ln -s ${codecs}/lib/libffmpeg.so $out/opt/yandex/${folderName}/libffmpeg.so
       # sed -i '68,74 s/^/#/' $out/opt/yandex/${folderName}/${binName}
