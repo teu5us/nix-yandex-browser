@@ -23,6 +23,8 @@
   gdk-pixbuf,
   glib,
   gtk3,
+  libGL,
+  libGLU,
   libX11,
   libxcb,
   libXScrnSaver,
@@ -35,6 +37,7 @@
   libXrandr,
   libXrender,
   libXtst,
+  libcap,
   libdrm,
   libnotify,
   libopus,
@@ -42,6 +45,8 @@
   libuuid,
   libva,
   libxshmfence,
+  vulkan-loader,
+  pciutils,
   mesa,
   nspr,
   pango,
@@ -51,6 +56,7 @@
   makeWrapper,
   vivaldi-ffmpeg-codecs,
   squashfsTools,
+  wayland,
   pname,
   version,
   sha256,
@@ -146,6 +152,8 @@ let
       glib
       gnome2.GConf
       gtk3
+      libGL
+      libGLU
       libX11
       libXScrnSaver
       libXcomposite
@@ -157,6 +165,7 @@ let
       libXrandr
       libXrender
       libXtst
+      libcap
       libdrm
       libnotify
       libopus
@@ -164,10 +173,12 @@ let
       libva
       libxcb
       libxshmfence
+      pciutils
       mesa
       nspr
       nss
       pango
+      wayland
       stdenv.cc.cc.lib
     ];
 
@@ -200,6 +211,25 @@ let
       # install extensions
       mkdir -p $out/opt/yandex/${folderName}/Extensions
       ${lib.concatMapStringsSep "\n" extensionJsonScript extensions}
+    '';
+
+    postFixup = ''
+      # Make sure that libGLESv2 and libvulkan are found by dlopen in both chromium binary and ANGLE libGLESv2.so.
+      # libpci (from pciutils) is needed by dlopen in angle/src/gpu_info_util/SystemInfo_libpci.cpp
+        
+      for binary in "$out/opt/yandex/${folderName}/yandex_browser" "$out/opt/yandex/${folderName}/libGLESv2.so"; do
+        patchelf --set-rpath "${
+          lib.makeLibraryPath [
+            libGL
+            vulkan-loader
+            pciutils
+          ]
+        }:$(patchelf --print-rpath "$binary")" "$binary"
+      done
+
+      # replace bundled vulkan-loader
+      rm "$out/opt/yandex/${folderName}/libvulkan.so.1"
+      ln -s -t "$out/opt/yandex/${folderName}" "${lib.getLib vulkan-loader}/lib/libvulkan.so.1"
     '';
 
     runtimeDependencies =
